@@ -1,0 +1,53 @@
+# -------------------------
+# Node / Vue (Frontend)
+# -------------------------
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.local
+frontend/.DS_Store
+
+# Editor / Systemfiles
+*.log
+.DS_Store
+.idea/
+.vscode/
+
+# -------------------------
+# Java / Maven (Backend)
+# -------------------------
+backend/target/
+backend/.classpath
+backend/.project
+backend/.settings/
+backend/.factorypath
+backend/.env
+backend/.DS_Store
+
+# Maven wrapper / cache
+.mvn/
+**/mvnw
+**/mvnw.cmd
+
+# -------------------------
+# Docker / Compose
+# -------------------------
+*.pid
+*.seed
+*.pid.lock
+docker-compose.override.yml
+.env
+
+# -------------------------
+# OS / Misc
+# -------------------------
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# -------------------------
+# Optional: IDE specific
+# -------------------------
+*.iml
+.idea/
+.vscode/
