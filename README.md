@@ -1,6 +1,9 @@
 # coupling Landing Page Template
 
-## Frontend
+#### Repository klonen
+```bash
+git clone https://github.com/FarbKlexx/landing-page-template.git
+```
 
 ## Installation & Setup (Vue/Vuetify Frontend)
 
@@ -15,9 +18,8 @@ Alle benötigten Abhängigkeiten werden automatisch anhand der [`package.json`](
 
 ### Projekt starten
 
-#### 1. Repository klonen
+#### 1. In den Frontend-Ordner wechseln
 ```bash
-git clone https://github.com/<DEIN-USERNAME>/<DEIN-REPO>.git
 cd frontend
 ```
 
@@ -74,7 +76,7 @@ Vollständige und aktuelle Liste findest du jederzeit in der Datei [`package.jso
 
 </details>
 
-## Backend
+## Installation & Setup (Maven/Spring Boot Backend)
 
 Dieses Projekt verwendet **Maven** als Build- und Dependency-Management-Tool.  
 Alle benötigten Abhängigkeiten werden automatisch anhand der [`pom.xml`](./pom.xml) installiert.
@@ -88,9 +90,8 @@ Alle benötigten Abhängigkeiten werden automatisch anhand der [`pom.xml`](./pom
 
 ### Projekt bauen & starten
 
-#### 1. Repository klonen
+#### 1. In den Backend-Ordner wechseln
 ```bash
-git clone https://github.com/FarbKlexx/landing-page-template.git
 cd backend
 ```
 
