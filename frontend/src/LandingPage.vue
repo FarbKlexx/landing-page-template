@@ -6,7 +6,6 @@ const showOverlay = ref(false);
 </script>
 
 <template>
-  <!-- Hauptbereich: Flexbox für horizontale & vertikale Zentrierung -->
   <div class="landing-root">
     <div class="landing-content">
       <h1 class="text-h3">Willkommen auf unserer Landingpage</h1>

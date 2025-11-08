@@ -19,6 +19,18 @@ const isSubmitting = ref(false);
 const success = ref(false);
 const error = ref("");
 
+const rules = {
+  required: (v: string) => !!v || "Dieses Feld ist erforderlich.",
+  email: (v: string) =>
+    !v || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) || "Bitte eine gültige E-Mail-Adresse eingeben.",
+  postalCode: (v: string) =>
+    !v || /^[0-9]{4,5}$/.test(v) || "Bitte eine gültige Postleitzahl eingeben.",
+  phone: (v: string) =>
+    !v || /^[0-9+\-\s()]{6,20}$/.test(v) || "Bitte eine gültige Telefonnummer eingeben.",
+  maxLength: (max: number) => (v: string) =>
+    !v || v.length <= max || `Maximal ${max} Zeichen erlaubt.`,
+};
+
 async function handleSubmit() {
   try {
     isSubmitting.value = true;
@@ -51,24 +63,92 @@ async function handleSubmit() {
     <div class="overlay-content">
       <button class="close-btn" @click="emit('close')">×</button>
 
-      <form @submit.prevent="handleSubmit" class="signup-form">
+      <v-container fluid>
         <h2>Anmeldung</h2>
+      </v-container>
+      <v-form @submit.prevent="handleSubmit" class="signup-form">
 
-        <input v-model="user.name" placeholder="Name" required />
-        <input v-model="user.email" placeholder="E-Mail" required type="email" />
-        <input v-model="user.phone" placeholder="Telefon" />
+        <v-text-field
+          v-model="user.name"
+          label="Name"
+          variant="outlined"
+          :rules="[rules.required, rules.maxLength(50)]"
+          required
+        />
 
-        <input v-model="user.street" placeholder="Straße" />
-        <input v-model="user.houseNumber" placeholder="Hausnummer" />
-        <input v-model="user.postalCode" placeholder="Postleitzahl" />
+        <v-text-field
+          v-model="user.email"
+          label="E-Mail"
+          type="email"
+          variant="outlined"
+          :rules="[rules.required, rules.email]"
+          required
+        />
 
-        <textarea v-model="user.message" placeholder="Nachricht"></textarea>
+        <v-text-field
+          v-model="user.phone"
+          label="Telefon"
+          variant="outlined"
+          :rules="[rules.phone]"
+        />
 
-        <button type="submit" :disabled="isSubmitting">Anmelden</button>
+        <v-text-field
+          v-model="user.street"
+          label="Straße"
+          variant="outlined"
+          :rules="[rules.maxLength(100)]"
+        />
 
-        <p v-if="success" style="color:green">Danke für deine Anmeldung!</p>
-        <p v-if="error" style="color:red">{{ error }}</p>
-      </form>
+        <v-text-field
+          v-model="user.houseNumber"
+          label="Hausnummer"
+          variant="outlined"
+          :rules="[rules.maxLength(10)]"
+        />
+
+        <v-text-field
+          v-model="user.postalCode"
+          label="Postleitzahl"
+          variant="outlined"
+          :rules="[rules.postalCode]"
+        />
+
+        <v-textarea
+          v-model="user.message"
+          label="Nachricht"
+          auto-grow
+          rows="3"
+          variant="outlined"
+          :rules="[rules.maxLength(500)]"
+        />
+
+        <v-btn
+          type="submit"
+          :loading="isSubmitting"
+          color="primary"
+          block
+          class="mt-2"
+        >
+          Anmelden
+        </v-btn>
+
+        <v-alert
+          v-if="success"
+          type="success"
+          variant="tonal"
+          class="mt-2"
+        >
+          Danke für deine Anmeldung!
+        </v-alert>
+        <v-alert
+          v-if="error"
+          type="error"
+          variant="tonal"
+          class="mt-2"
+        >
+          {{ error }}
+        </v-alert>
+      </v-form>
     </div>
   </div>
 </template>
@@ -110,6 +190,5 @@ async function handleSubmit() {
 .signup-form {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
 }
 </style>
