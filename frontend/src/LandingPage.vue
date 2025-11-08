@@ -1,73 +1,64 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { userService } from "@/api/userService";
-import type { User } from "@/types/User";
+import SignupOverlay from "@/components/SignupOverlay.vue";
 
-const user = ref<User>({
-  name: "",
-  email: "",
-  phone: "",
-  street: "",
-  houseNumber: "",
-  postalCode: "",
-  message: "",
-});
-
-const isSubmitting = ref(false);
-const success = ref(false);
-const error = ref("");
-
-async function handleSubmit() {
-  try {
-    isSubmitting.value = true;
-    success.value = false;
-    error.value = "";
-
-    await userService.signup(user.value);
-
-    success.value = true;
-
-    user.value = {
-      name: "",
-      email: "",
-      phone: "",
-      street: "",
-      houseNumber: "",
-      postalCode: "",
-      message: "",
-    };
-  } catch (err: any) {
-    error.value = err.message || "Fehler beim Absenden.";
-  } finally {
-    isSubmitting.value = false;
-  }
-}
+const showOverlay = ref(false);
 </script>
 
 <template>
-  <form @submit.prevent="handleSubmit" class="signup-form">
-    <input v-model="user.name" placeholder="Name" required />
-    <input v-model="user.email" placeholder="E-Mail" required type="email" />
-    <input v-model="user.phone" placeholder="Telefon" />
+  <!-- Hauptbereich: Flexbox für horizontale & vertikale Zentrierung -->
+  <div class="landing-root">
+    <div class="landing-content">
+      <h1 class="text-h3">Willkommen auf unserer Landingpage</h1>
+      <p class="text-body-1">Melde dich jetzt an!</p>
 
-    <input v-model="user.street" placeholder="Straße" />
-    <input v-model="user.houseNumber" placeholder="Hausnummer" />
-    <input v-model="user.postalCode" placeholder="Postleitzahl" />
+      <v-btn
+        color="primary"
+        size="large"
+        @click="showOverlay = true"
+        elevation="3"
+        class="open-overlay-btn"
+      >
+        Jetzt anmelden
+      </v-btn>
 
-    <textarea v-model="user.message" placeholder="Nachricht"></textarea>
-
-    <button type="submit" :disabled="isSubmitting">Anmelden</button>
-
-    <p v-if="success" style="color:green">Danke für deine Anmeldung!</p>
-    <p v-if="error" style="color:red">{{ error }}</p>
-  </form>
+      <SignupOverlay v-if="showOverlay" @close="showOverlay = false" />
+    </div>
+  </div>
 </template>
 
 <style scoped>
-.signup-form {
+/* Der äußere Container zentriert vertikal + horizontal */
+.landing-root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Vollbildhöhe */
+}
+
+/* Der innere Stack ordnet Elemente dynamisch mit Abstand an */
+.landing-content {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  max-width: 400px;
+  align-items: center;
+  text-align: center;
+
+  /* dynamischer Abstand – wächst leicht mit Viewport */
+  row-gap: clamp(0.75rem, 2vw, 2rem);
+}
+
+/* Optional: eigener Button-Stil */
+.open-overlay-btn {
+  background: #3b5cff;
+  color: white;
+  font-weight: 600;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.open-overlay-btn:hover {
+  background: #2c46d3;
 }
 </style>
