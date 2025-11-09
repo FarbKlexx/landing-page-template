@@ -105,6 +105,12 @@ mvn clean install
 mvn spring-boot:run
 ```
 
+#### 4. H2 Entwicklungs-Datenbank aufrufen
+http://localhost:8080/h2-console/login.do
+
+#### 5. SwaggerUI API Dokumentation aufrufen
+http://localhost:8080/swagger-ui/index.html
+
 <details>
   <summary>Dependencies</summary>
 
@@ -140,6 +146,7 @@ Vollständige und aktuelle Liste findest du jederzeit in der Datei: [`pom.xml`](
 ### Projekt-Eigenschaften
 | Property | Wert |
 |-----------|-------|
+
 | **Java-Version** | 21 |
 | **Spring Boot Parent** | `org.springframework.boot:spring-boot-starter-parent:3.5.7` |
 
