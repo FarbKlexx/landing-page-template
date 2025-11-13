@@ -11,8 +11,7 @@ Das Frontend basiert auf **Vue 3**, **Vuetify 3** und **Vite**.
 Alle benötigten Abhängigkeiten werden automatisch anhand der [`package.json`](./package.json) installiert.
 
 ### Voraussetzungen
-- **Node.js 18+** (empfohlen: Node 20 oder 22)
-- **npm 9+**
+- **[Node.js 18+](https://nodejs.org/en/download)**
 
 ---
 
@@ -82,8 +81,8 @@ Dieses Projekt verwendet **Maven** als Build- und Dependency-Management-Tool.
 Alle benötigten Abhängigkeiten werden automatisch anhand der [`pom.xml`](./pom.xml) installiert.
 
 ### Voraussetzungen
-- **Java 21** (oder höher)
-- **Maven 3.9+**
+- **[Java 21+](https://www.oracle.com/de/java/technologies/downloads/)**
+- **[Maven 3.9+](https://maven.apache.org/install.html)**
 - Internetzugang (für den ersten Download der Dependencies)
 
 ---
