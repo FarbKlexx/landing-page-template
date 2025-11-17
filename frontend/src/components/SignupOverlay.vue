@@ -6,7 +6,8 @@ import type { User } from "@/types/User";
 const emit = defineEmits(["close"]);
 
 const user = ref<User>({
-  name: "",
+  firstName: "",
+  lastName: "",
   email: "",
   phone: "",
   street: "",
@@ -19,18 +20,6 @@ const isSubmitting = ref(false);
 const success = ref(false);
 const error = ref("");
 
-const rules = {
-  required: (v: string) => !!v || "Dieses Feld ist erforderlich.",
-  email: (v: string) =>
-    !v || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) || "Bitte eine gültige E-Mail-Adresse eingeben.",
-  postalCode: (v: string) =>
-    !v || /^[0-9]{4,5}$/.test(v) || "Bitte eine gültige Postleitzahl eingeben.",
-  phone: (v: string) =>
-    !v || /^[0-9+\-\s()]{6,20}$/.test(v) || "Bitte eine gültige Telefonnummer eingeben.",
-  maxLength: (max: number) => (v: string) =>
-    !v || v.length <= max || `Maximal ${max} Zeichen erlaubt.`,
-};
-
 async function handleSubmit() {
   try {
     isSubmitting.value = true;
@@ -40,9 +29,9 @@ async function handleSubmit() {
     await userService.signup(user.value);
     success.value = true;
 
-    // Formular zurücksetzen
     user.value = {
-      name: "",
+      firstName: "",
+      lastName: "",
       email: "",
       phone: "",
       street: "",
@@ -57,138 +46,170 @@ async function handleSubmit() {
   }
 }
 </script>
-
 <template>
-  <div class="overlay" @click.self="emit('close')">
-    <div class="overlay-content">
-      <button class="close-btn" @click="emit('close')">×</button>
+  <div
+      class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
+      @click.self="emit('close')"
+  >
+    <div
+        class="bg-card text-card-foreground w-11/12 max-w-lg p-6 rounded-xl shadow-lg relative"
+    >
+      <!-- Close -->
+      <button
+          @click="emit('close')"
+          class="absolute top-3 right-3 text-muted-foreground hover:text-foreground"
+      >
+        ×
+      </button>
 
-      <v-container fluid>
-        <h2>Anmeldung</h2>
-      </v-container>
-      <v-form @submit.prevent="handleSubmit" class="signup-form">
+      <h2 class="text-2xl font-bold mb-6">Anmeldung</h2>
 
-        <v-text-field
-          v-model="user.name"
-          label="Name"
-          variant="outlined"
-          :rules="[rules.required, rules.maxLength(50)]"
-          required
-        />
+      <form @submit.prevent="handleSubmit" class="space-y-4">
 
-        <v-text-field
-          v-model="user.email"
-          label="E-Mail"
-          type="email"
-          variant="outlined"
-          :rules="[rules.required, rules.email]"
-          required
-        />
+        <!-- Vorname + Nachname -->
+        <div class="flex flex-col gap-4 md:flex-row">
 
-        <v-text-field
-          v-model="user.phone"
-          label="Telefon"
-          variant="outlined"
-          :rules="[rules.phone]"
-        />
+          <!-- Vorname -->
+          <div class="flex-1">
+            <label class="text-sm font-medium block text-left">Vorname *</label>
+            <input
+                v-model="user.firstName"
+                required
+                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2
+               text-sm ring-offset-background placeholder:text-muted-foreground
+               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
+               focus-visible:ring-offset-2"
+            />
+          </div>
 
-        <v-text-field
-          v-model="user.street"
-          label="Straße"
-          variant="outlined"
-          :rules="[rules.maxLength(100)]"
-        />
+          <!-- Nachname -->
+          <div class="flex-1">
+            <label class="text-sm font-medium block text-left">Nachname *</label>
+            <input
+                v-model="user.lastName"
+                required
+                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2
+               text-sm ring-offset-background placeholder:text-muted-foreground
+               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
+               focus-visible:ring-offset-2"
+            />
+          </div>
 
-        <v-text-field
-          v-model="user.houseNumber"
-          label="Hausnummer"
-          variant="outlined"
-          :rules="[rules.maxLength(10)]"
-        />
+        </div>
 
-        <v-text-field
-          v-model="user.postalCode"
-          label="Postleitzahl"
-          variant="outlined"
-          :rules="[rules.postalCode]"
-        />
+        <!-- Email -->
+        <div>
+          <label class="text-sm font-medium block text-left">E-Mail *</label>
+          <input
+              v-model="user.email"
+              type="email"
+              required
+              class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2
+             text-sm ring-offset-background placeholder:text-muted-foreground
+             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
+             focus-visible:ring-offset-2"
+          />
+        </div>
 
-        <v-textarea
-          v-model="user.message"
-          label="Nachricht"
-          auto-grow
-          rows="3"
-          variant="outlined"
-          :rules="[rules.maxLength(500)]"
-        />
+        <!-- Telefon -->
+        <div>
+          <label class="text-sm font-medium block text-left">Telefon</label>
+          <input
+              v-model="user.phone"
+              class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2
+             text-sm ring-offset-background placeholder:text-muted-foreground
+             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
+             focus-visible:ring-offset-2"
+          />
+        </div>
 
-        <v-btn
-          type="submit"
-          :loading="isSubmitting"
-          color="primary"
-          block
-          class="mt-2"
+        <!-- Straße + Hausnummer + PLZ -->
+        <div class="flex flex-col gap-4 md:flex-row">
+
+          <!-- Straße -->
+          <div class="flex-1 md:flex-[2]">
+            <label class="text-sm font-medium block text-left">Straße</label>
+            <input
+                v-model="user.street"
+                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2
+               text-sm ring-offset-background placeholder:text-muted-foreground
+               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
+               focus-visible:ring-offset-2"
+            />
+          </div>
+
+          <!-- Hausnummer -->
+          <div class="flex-1 md:flex-[1]">
+            <label class="text-sm font-medium block text-left">Hausnummer</label>
+            <input
+                v-model="user.houseNumber"
+                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2
+               text-sm ring-offset-background placeholder:text-muted-foreground
+               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
+               focus-visible:ring-offset-2"
+            />
+          </div>
+
+          <!-- PLZ -->
+          <div class="flex-1 md:flex-[1]">
+            <label class="text-sm font-medium block text-left">Postleitzahl</label>
+            <input
+                v-model="user.postalCode"
+                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2
+               text-sm ring-offset-background placeholder:text-muted-foreground
+               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
+               focus-visible:ring-offset-2"
+            />
+          </div>
+
+        </div>
+
+        <!-- Nachricht -->
+        <div>
+          <label class="text-sm font-medium block text-left">Nachricht</label>
+          <textarea
+              v-model="user.message"
+              rows="3"
+              class="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2
+             text-sm ring-offset-background placeholder:text-muted-foreground
+             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
+             focus-visible:ring-offset-2"
+          ></textarea>
+        </div>
+
+        <!-- Submit -->
+        <button
+            type="submit"
+            :disabled="isSubmitting"
+            class="w-full inline-flex items-center justify-center rounded-md text-sm font-medium
+           ring-offset-background transition-colors
+           bg-primary text-primary-foreground hover:bg-primary/90
+           h-10 px-4 py-2 disabled:opacity-50"
         >
-          Anmelden
-        </v-btn>
+          <span v-if="!isSubmitting">Absenden</span>
+          <span v-else class="animate-pulse">Wird gesendet…</span>
+        </button>
 
-        <v-alert
-          v-if="success"
-          type="success"
-          variant="tonal"
-          class="mt-2"
+        <!-- Alerts -->
+        <p
+            v-if="success"
+            class="mt-2 bg-green-100 text-green-700 px-3 py-2 rounded-md text-sm"
         >
           Danke für deine Anmeldung!
-        </v-alert>
-        <v-alert
-          v-if="error"
-          type="error"
-          variant="tonal"
-          class="mt-2"
+        </p>
+
+        <p
+            v-if="error"
+            class="mt-2 bg-red-100 text-red-700 px-3 py-2 rounded-md text-sm"
         >
           {{ error }}
-        </v-alert>
-      </v-form>
+        </p>
+      </form>
+
+
     </div>
   </div>
 </template>
 
-<style scoped>
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
 
-.overlay-content {
-  background: white;
-  padding: 2rem;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 500px;
-  position: relative;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-}
 
-.close-btn {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.75rem;
-  font-size: 1.5rem;
-  border: none;
-  background: none;
-  cursor: pointer;
-}
-
-.signup-form {
-  display: flex;
-  flex-direction: column;
-}
-</style>
